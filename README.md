@@ -6,7 +6,10 @@ Set of functions which may be helpful for image manipulation prior to training a
 <br>
 
 install using:
+
 <br>
+
 library(devtools)
 install.github("amanasj/imageAIready")
+
 <br>
