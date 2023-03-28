@@ -10,6 +10,8 @@ install using:
 <br>
 
 library(devtools)
+
+
 install.github("amanasj/imageAIready")
 
 <br>
