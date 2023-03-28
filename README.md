@@ -14,4 +14,7 @@ library(devtools)
 
 install.github("amanasj/imageAIready")
 
+
+library(imageAIready)
+
 <br>
