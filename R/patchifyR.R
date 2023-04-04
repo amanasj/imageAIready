@@ -3,7 +3,7 @@
 ############################ Patching program #############################################
 ###########################################################################################
 
-patchifyR <- function(images_path, masks_path, patch_size=200, dir){
+patchifyR <- function(images_path, masks_path, patch_size=256, dir){
 
   # install and load raster
   if (!require("raster")){
