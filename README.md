@@ -12,7 +12,7 @@ install using:
 library(devtools)
 
 
-install.github("amanasj/imageAIready")
+install_github("amanasj/imageAIready")
 
 
 library(imageAIready)
