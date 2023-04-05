@@ -3,7 +3,7 @@
 ###########################################################################################
 
 patchifyR <- function(images_path, 
-                      masks_path = NULL, 
+                      masks_path, 
                       patch_size=256, 
                       dir=dirname(dirname(images_path)),
                       heyex_xml_file = FALSE){
@@ -34,7 +34,7 @@ patchifyR <- function(images_path,
   dir.create(paste0(dir, "/patches_folder/"))
   img_output_directory <- paste0(dir, "/patches_folder/images/")
   dir.create(img_output_directory)
-  if (is.null(masks_path) == TRUE){}else{
+  if(missing(mask_path)){}else{
     mask_output_directory <- paste0(dir, "/patches_folder/masks/")
     dir.create(mask_output_directory)
   } 
@@ -60,7 +60,7 @@ patchifyR <- function(images_path,
     img = raster(images[i])
     imgs_list[[i]] <- img
   }
-  if (is.null(masks_path) == TRUE){}else{
+  if(missing(mask_path)){}else{
     masks <- list.files(masks_path, full.names = T)
     masks_list <- list()
     for(i in seq_along(masks)){ 
@@ -76,7 +76,7 @@ patchifyR <- function(images_path,
       img = raster(images[i])
       imgs_list[[i]] <- img
     }
-    if (is.null(masks_path) == TRUE){}else{
+    if(missing(mask_path)){}else{
       masks <- list.files(masks_path, full.names = T)
       masks_list <- list()
       for(i in seq_along(masks)){ 
@@ -135,7 +135,7 @@ patchifyR <- function(images_path,
   
   ############## run above function for my lists ##############
   my_patches_img <- process_image(input_images=imgs_list, patch_size=patch_size) 
-  if (is.null(masks_path) == TRUE){}else{
+  if(missing(mask_path)){}else{
     my_patches_mask <- process_image(input_images=masks_list, patch_size=patch_size)
   }
   
@@ -144,7 +144,7 @@ patchifyR <- function(images_path,
     for(j in 1:length(my_patches_img[[i]]$patches)){
       writeRaster(my_patches_img[[i]]$patches[[j]], paste0(img_output_directory, my_patches_img[[i]]$names[[j]], ".tif"), 
                   drivername="Gtiff", overwrite=TRUE, datatype='INT1U')
-      if (is.null(masks_path) == TRUE){}else{
+      if(missing(mask_path)){}else{
         writeRaster(my_patches_mask[[i]]$patches[[j]], paste0(mask_output_directory, my_patches_mask[[i]]$names[[j]], ".tif"), 
                     drivername="Gtiff", overwrite=TRUE, datatype='INT1U')
       }
@@ -154,6 +154,9 @@ patchifyR <- function(images_path,
   
   
 }
+
+
+
 
 
 
