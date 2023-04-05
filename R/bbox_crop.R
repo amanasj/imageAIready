@@ -124,7 +124,7 @@ bbox_crop <- function(images_path,
     cropped <- imager::imsub(xx, x>min_x & x<max_x+1, y>min_y-5 & y<max_y+1) %>% plot()
     p <- as.raster(cropped) 
     p <- plot(cropped)
-    p <- EBImage::resize(p, w=w, h=h)
+    p <- EBImage::resize(p, w=width, h=height)
     p <- lidaRtRee::cimg2Raster(p)
     
     writeRaster(p, paste0(dir,"/bboxcropped_images/images/", filename_image), overwrite=T, datatype='INT1U')
@@ -145,7 +145,7 @@ bbox_crop <- function(images_path,
       cropped <- imager::imsub(zz, x>min_x & x<max_x+1, y>min_y-5 & y<max_y+1) %>% plot()
       q <- as.raster(cropped) 
       q <- plot(cropped)
-      q <- EBImage::resize(q, w=w, h=h)
+      q <- EBImage::resize(q, w=width, h=height)
       q <- lidaRtRee::cimg2Raster(q)
       cat(paste("----------------------------",
                 paste0("cropped image : ", filename_image),
