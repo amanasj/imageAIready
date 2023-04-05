@@ -40,8 +40,8 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
   filenames0 <- unique(unlist(filenames0))
   
   
-  for (i in length(filenames)){
-    #i=1
+  for (i in 1:length(filenames0)){
+    #i=2
     patch_list_by_filename <- list.files(patched_images_folder, 
                                          pattern = paste0(filenames0[i]),
                                          full.names = T)
@@ -64,11 +64,13 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
     list2$fun  <- max
     rast.mosaic <- do.call(terra::mosaic, list2)
     plot(rast.mosaic, axes=F, legend=F, bty="n", box=FALSE)
-    writeRaster(rast.mosaic, filename=paste0(img_output_directory,"/", filenames0[i]), 
+    writeRaster(rast.mosaic, filename=paste0(img_output_directory, filenames0[i]), 
                 format="GTiff", datatype='INT1U', overwrite=TRUE)
     
   
   }
+  
+  
   
 }
 
