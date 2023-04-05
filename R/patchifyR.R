@@ -1,3 +1,4 @@
+
 ###########################################################################################
 ############################ Patching program #############################################
 ###########################################################################################
@@ -41,26 +42,25 @@ patchifyR <- function(images_path,
   
   
   ### read the heyex xml file
-  file <- list.files(images_path, full.names = T, pattern = "\\.xml$")
-  
   if (heyex_xml_file == TRUE) {
-  xml <- read_xml(file)
-  ### get attributes from xml file
-  ID = xml_find_all(xml, ".//Image/ID") %>% xml_text( "ID" )
-  ExamURL = xml_find_all(xml, ".//Image/ImageData/ExamURL" ) %>%  xml_text( "ExamURL" )
-  ## identify the 0th image - this is the enface image
-  ExamURL_enface <- basename(ExamURL[c(1)])
+    file <- list.files(images_path, full.names = T, pattern = "\\.xml$")
+    xml <- read_xml(file)
+    ### get attributes from xml file
+    ID = xml_find_all(xml, ".//Image/ID") %>% xml_text( "ID" )
+    ExamURL = xml_find_all(xml, ".//Image/ImageData/ExamURL" ) %>%  xml_text( "ExamURL" )
+    ## identify the 0th image - this is the enface image
+    ExamURL_enface <- basename(ExamURL[c(1)])
 
-  images <- list.files(images_path, full.names = T, pattern = ".tif")
-  #### remove the enface image from the list
-  to_be_deleted <- list.files(images_path, full.names = T, pattern = ExamURL_enface)
-  images <- images[images != to_be_deleted]
-  imgs_list <- list()
-  for(i in seq_along(images)){ 
+    images <- list.files(images_path, full.names = T, pattern = ".tif")
+    #### remove the enface image from the list
+    to_be_deleted <- list.files(images_path, full.names = T, pattern = ExamURL_enface)
+    images <- images[images != to_be_deleted]
+    imgs_list <- list()
+    for(i in seq_along(images)){ 
     img = raster(images[i])
     imgs_list[[i]] <- img
-  }
-  if(missing(mask_path)){}else{
+    }
+    if(missing(mask_path)){}else{
     masks <- list.files(masks_path, full.names = T)
     masks_list <- list()
     for(i in seq_along(masks)){ 
@@ -154,10 +154,6 @@ patchifyR <- function(images_path,
   
   
 }
-
-
-
-
 
 
 
