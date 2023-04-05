@@ -2,7 +2,12 @@
 ############################ Patching program #############################################
 ###########################################################################################
 
-patchifyR <- function(images_path, masks_path = NULL, patch_size=256, dir = NULL){
+patchifyR <- function(images_path, 
+                      masks_path = NULL, 
+                      patch_size=256, 
+                      dir=dirname(dirname(images_path)),
+                      heyex_xml_file = FALSE){
+  
   
   # install and load raster
   if (!require("raster")){
@@ -10,25 +15,52 @@ patchifyR <- function(images_path, masks_path = NULL, patch_size=256, dir = NULL
     library(raster)
     suppressPackageStartupMessages({library(raster)})
   }
+  # install and load raster
+  if (!require("xml2")){
+    install.packages("xml2")
+    library(xml2)
+    suppressPackageStartupMessages({library(xml2)})
+  }
+  # install and load raster
+  if (!require("tidyverse")){
+    install.packages("tidyverse")
+    library(tidyverse)
+    suppressPackageStartupMessages({library(tidyverse)})
+  }
   
   
-  dir.create(paste0(dir, "/patched_images/"))
-  img_output_directory <- paste0(dir, "/patched_images/images/")
+  
+  
+  dir.create(paste0(dir, "/patches_folder/"))
+  img_output_directory <- paste0(dir, "/patches_folder/images/")
   dir.create(img_output_directory)
-  if (is.null(masks_path) == TRUE){""}else{
-    mask_output_directory <- paste0(dir, "/patched_images/masks/")
+  if (is.null(masks_path) == TRUE){}else{
+    mask_output_directory <- paste0(dir, "/patches_folder/masks/")
     dir.create(mask_output_directory)
   } 
   
   
-  ##### load in images and masks
-  images <- list.files(images_path, full.names = T)
+  ### read the heyex xml file
+  file <- list.files(images_path, full.names = T, pattern = "\\.xml$")
+  
+  if (heyex_xml_file == TRUE) {
+  xml <- read_xml(file)
+  ### get attributes from xml file
+  ID = xml_find_all(xml, ".//Image/ID") %>% xml_text( "ID" )
+  ExamURL = xml_find_all(xml, ".//Image/ImageData/ExamURL" ) %>%  xml_text( "ExamURL" )
+  ## identify the 0th image - this is the enface image
+  ExamURL_enface <- basename(ExamURL[c(1)])
+
+  images <- list.files(images_path, full.names = T, pattern = ".tif")
+  #### remove the enface image from the list
+  to_be_deleted <- list.files(images_path, full.names = T, pattern = ExamURL_enface)
+  images <- images[images != to_be_deleted]
   imgs_list <- list()
   for(i in seq_along(images)){ 
     img = raster(images[i])
     imgs_list[[i]] <- img
   }
-  if (is.null(masks_path) == TRUE){""}else{
+  if (is.null(masks_path) == TRUE){}else{
     masks <- list.files(masks_path, full.names = T)
     masks_list <- list()
     for(i in seq_along(masks)){ 
@@ -37,7 +69,23 @@ patchifyR <- function(images_path, masks_path = NULL, patch_size=256, dir = NULL
     }
   }
   
-  
+  }else{
+    images <- list.files(images_path, full.names = T, pattern = ".tif")
+    imgs_list <- list()
+    for(i in seq_along(images)){ 
+      img = raster(images[i])
+      imgs_list[[i]] <- img
+    }
+    if (is.null(masks_path) == TRUE){}else{
+      masks <- list.files(masks_path, full.names = T)
+      masks_list <- list()
+      for(i in seq_along(masks)){ 
+        mask = raster(masks[i])
+        masks_list[[i]] <- mask 
+      }
+    }
+    
+  }
   
   
   ############## Patchify function ################
@@ -45,11 +93,13 @@ patchifyR <- function(images_path, masks_path = NULL, patch_size=256, dir = NULL
     patchify_list <- list()
     for (k in 1:length(input_images)){
       img <- input_images[[k]]
+      filename <- basename(img@file@name)
+      filename <- tools::file_path_sans_ext(filename)
       # create image divisible by the patch_size
-      message(paste0("Cropping original image. ", "Making it divisible by ", patch_size, "."))
-      x_max <- patch_size*trunc(nrow(img)/patch_size)
-      y_max <- patch_size*trunc(ncol(img)/patch_size)
-      img <- crop(img, extent(img, 1, x_max, 1, y_max))
+      message(paste0("WARNING: Cropping original image to make it divisible by ", patch_size, "."))
+      x_max <- patch_size*trunc(ncol(img)/patch_size)
+      y_max <- patch_size*trunc(nrow(img)/patch_size)
+      img <- crop(img, extent(0, x_max, 0, y_max))
       # initializers
       lx = 1; ly = 1; p = 1
       ls.patches <- list()
@@ -58,8 +108,6 @@ patchifyR <- function(images_path, masks_path = NULL, patch_size=256, dir = NULL
       for(i in 1:(nrow(img)/patch_size)){
         for(j in 1:(ncol(img)/patch_size)){
           ls.patches[[p]] <- crop(img, extent(img, lx, (lx+patch_size)-1, ly, (ly+patch_size)-1))
-          filename <- basename(filename(img))
-          filename <- tools::file_path_sans_ext(filename)
           ls.coordinates[[p]] <- paste0((filename),"_patchify_", p, "_(", i, ",", j, ")")
           message(paste0((filename),"_patchify_", p, "_(", i, ",", j, ")"))
           
@@ -87,7 +135,7 @@ patchifyR <- function(images_path, masks_path = NULL, patch_size=256, dir = NULL
   
   ############## run above function for my lists ##############
   my_patches_img <- process_image(input_images=imgs_list, patch_size=patch_size) 
-  if (is.null(masks_path) == TRUE){""}else{
+  if (is.null(masks_path) == TRUE){}else{
     my_patches_mask <- process_image(input_images=masks_list, patch_size=patch_size)
   }
   
@@ -96,7 +144,7 @@ patchifyR <- function(images_path, masks_path = NULL, patch_size=256, dir = NULL
     for(j in 1:length(my_patches_img[[i]]$patches)){
       writeRaster(my_patches_img[[i]]$patches[[j]], paste0(img_output_directory, my_patches_img[[i]]$names[[j]], ".tif"), 
                   drivername="Gtiff", overwrite=TRUE, datatype='INT1U')
-      if (is.null(masks_path) == TRUE){""}else{
+      if (is.null(masks_path) == TRUE){}else{
         writeRaster(my_patches_mask[[i]]$patches[[j]], paste0(mask_output_directory, my_patches_mask[[i]]$names[[j]], ".tif"), 
                     drivername="Gtiff", overwrite=TRUE, datatype='INT1U')
       }
@@ -106,6 +154,9 @@ patchifyR <- function(images_path, masks_path = NULL, patch_size=256, dir = NULL
   
   
 }
+
+
+
 
 
 
