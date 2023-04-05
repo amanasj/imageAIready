@@ -4,7 +4,7 @@
 #############################################################################
 
 ##### Function to input x=images to crop  and z=corresponding masks to crop
-bbox_crop <- function(image_path, mask_path, w=500, h=200, clean=1, fill=10, dir) {
+bbox_crop <- function(images_path, mask_path, w=500, h=200, clean=1, fill=10, dir) {
   
   # install and load raster
   if(!require("raster")){
