@@ -4,6 +4,23 @@
 #################################################################################################
 
 predictions_overlay <- function(images_folder, predictions, dir=dirname(images_folder)){
+  
+  
+    # install and load magick
+  if (!require("magick")){
+    install.packages("magick")
+    library(magick)
+    suppressPackageStartupMessages({library(magick)})
+  }
+  # install and load tidyverse
+  if (!require("tidyverse")){
+    install.packages("tidyverse")
+    library(tidyverse)
+    suppressPackageStartupMessages({library(tidyverse)})
+  }
+  
+  
+  
   for (i in 1:length(predictions$summary$filename)){
     #i=2
     dir.create(paste0(dir, "/AI_predictions"))
