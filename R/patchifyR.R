@@ -16,13 +16,13 @@ patchifyR <- function(images_path,
     library(raster)
     suppressPackageStartupMessages({library(raster)})
   }
-  # install and load raster
+  # install and load xml2
   if (!require("xml2")){
     install.packages("xml2")
     library(xml2)
     suppressPackageStartupMessages({library(xml2)})
   }
-  # install and load raster
+  # install and load tidyverse
   if (!require("tidyverse")){
     install.packages("tidyverse")
     library(tidyverse)
