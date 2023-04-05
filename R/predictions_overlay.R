@@ -38,7 +38,7 @@ predictions_overlay <- function(images_folder, predictions, dir=dirname(images_f
     magick::image_append(combine, stack = T)
     overlay <- combine %>% magick::image_composite(combine, operator = "plus", 
                                                    compose_args = "70%", gravity = "center")
-    i_name <- basename(out$summary$filename[i]) 
+    i_name <- basename(predictions$summary$filename[i]) 
     image_write(overlay[2], format <- "tif", path = paste0(predictions_folder, "/", i_name, sep=""))
   }
   
