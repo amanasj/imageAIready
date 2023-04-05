@@ -10,7 +10,8 @@ bbox_crop <- function(images_path,
                       h=200, 
                       clean=1, 
                       fill=10, 
-                      dir=dirname(dirname(images_path))) {
+                      dir = dirname(images_path),
+                      heyex_xml_file = FALSE) {
   
   
   
@@ -42,10 +43,40 @@ bbox_crop <- function(images_path,
   
   
   
-  #################### debugging line ####################
-  #  image <- file.path("C:\\Users\\xxxx\\Desktop\\R_scripts\\U-net\\images\\training_images\\ORT_training\\train\\images_grey\\2AE7A320.tif")
-  ########################################################
+  
+  
+  
+  ### read the heyex xml file
+  if (heyex_xml_file == TRUE) {
+    file <- list.files(images_path, full.names = T, pattern = "\\.xml$")
+    xml <- read_xml(file)
+    ### get attributes from xml file
+    ID = xml_find_all(xml, ".//Image/ID") %>% xml_text( "ID" )
+    ExamURL = xml_find_all(xml, ".//Image/ImageData/ExamURL" ) %>%  xml_text( "ExamURL" )
+    ## identify the 0th image - this is the enface image
+    ExamURL_enface <- basename(ExamURL[c(1)])
+    
+    images <- list.files(images_path, full.names = T, pattern = ".tif")
+    #### remove the enface image from the list
+    to_be_deleted <- list.files(images_path, full.names = T, pattern = ExamURL_enface)
+    images <- images[images != to_be_deleted]
+    imgs_list <- list()
+    for(i in seq_along(images)){ 
+      img = raster(images[i])
+      imgs_list[[i]] <- images
+    }
+    
+    
+  }else{
+  
+  
   images <- list.files(images_path, full.names = T)
+  
+  }
+  
+
+  
+  
   for (i in 1:length(images)){
     xx <- raster(images[i])
     filename_image <- basename(images[i])
