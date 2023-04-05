@@ -48,7 +48,7 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
     
     
     list2 <- list()
-    for(j in 1:8){#(length(patch_list_by_filename))){ 
+    for(j in 1:(length(patch_list_by_filename))){ 
       #j=8
       rx <- raster(patch_list_by_filename[j])
       list2[[j]] <- rx
@@ -71,5 +71,4 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
   }
   
 }
-
 
