@@ -35,7 +35,7 @@ patchifyR <- function(images_path,
   dir.create(paste0(dir, "/patches_folder/"))
   img_output_directory <- paste0(dir, "/patches_folder/images/")
   dir.create(img_output_directory)
-  if(missing(mask_path)){}else{
+  if(missing(masks_path)){}else{
     mask_output_directory <- paste0(dir, "/patches_folder/masks/")
     dir.create(mask_output_directory)
   } 
