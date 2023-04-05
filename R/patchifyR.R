@@ -6,7 +6,7 @@
 patchifyR <- function(images_path, 
                       masks_path, 
                       patch_size=256, 
-                      dir=dirname(images_path),
+                      dir=dirname(dirname(images_path)),
                       heyex_xml_file = FALSE){
   
   
@@ -60,7 +60,7 @@ patchifyR <- function(images_path,
     img = raster(images[i])
     imgs_list[[i]] <- img
     }
-    if(missing(mask_path)){}else{
+    if(missing(masks_path)){}else{
     masks <- list.files(masks_path, full.names = T)
     masks_list <- list()
     for(i in seq_along(masks)){ 
@@ -76,7 +76,7 @@ patchifyR <- function(images_path,
       img = raster(images[i])
       imgs_list[[i]] <- img
     }
-    if(missing(mask_path)){}else{
+    if(missing(masks_path)){}else{
       masks <- list.files(masks_path, full.names = T)
       masks_list <- list()
       for(i in seq_along(masks)){ 
@@ -135,7 +135,7 @@ patchifyR <- function(images_path,
   
   ############## run above function for my lists ##############
   my_patches_img <- process_image(input_images=imgs_list, patch_size=patch_size) 
-  if(missing(mask_path)){}else{
+  if(missing(masks_path)){}else{
     my_patches_mask <- process_image(input_images=masks_list, patch_size=patch_size)
   }
   
@@ -154,12 +154,6 @@ patchifyR <- function(images_path,
   
   
 }
-
-
-
-
-
-
 
 
 
