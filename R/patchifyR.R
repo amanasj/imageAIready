@@ -6,7 +6,7 @@
 patchifyR <- function(images_path, 
                       masks_path, 
                       patch_size=256, 
-                      dir=dirname(dirname(images_path)),
+                      dir=dirname(images_path),
                       heyex_xml_file = FALSE){
   
   
