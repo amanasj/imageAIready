@@ -1,11 +1,15 @@
-
-
 ######################################################################################################
 ####################  Simple resize function  #########################
 ######################################################################################################
 
 
-resize <- function(image_path, mask_path, dir, height=256, width=256){
+resize <- function(images_path, 
+                   masks_path = NULL, 
+                   dir=dirname(images_path), 
+                   height=256, 
+                   width=256)  {
+  
+  
   
   # install and load raster
   if(!require("raster")){
@@ -13,15 +17,24 @@ resize <- function(image_path, mask_path, dir, height=256, width=256){
     library(raster)
     suppressPackageStartupMessages({library(raster)})
   }
+  # install and load raster
+  if(!require("magick")){
+    install.packages("magick")
+    library(magick)
+    suppressPackageStartupMessages({library(magick)})
+  }
+  
+  
 
   
   resized_folder <- paste0(dir, "/resized_images/") 
   dir.create(paste0(resized_folder))
   resized_images_folder <- paste0(dir, "/resized_images/images/")
   dir.create(paste0(resized_images_folder)) 
+  if (is.null(masks_path) == TRUE){}else{
   resized_masks_folder <- paste0(dir, "/resized_images/masks/")
   dir.create(paste0(resized_masks_folder)) 
-
+  }
   
 #filepath <- file_path_as_absolute(dir)
 
@@ -29,21 +42,28 @@ new_size <- paste0(width, "x", height, "!")
 
 
 
+img_list <- list.files(images_path, full.names = TRUE, pattern = ".tif")
+if (is.null(masks_path) == TRUE){}else{
+msk_list <- list.files(masks_path, full.names = TRUE, pattern = ".tif")
+}
+
+
 #### resize images or masks and save in new respective folders
-for (z in 1:length(images_path)){
-  #z=1
-  resized_img <- image_read(images_path$info$filename[z])
-  resized_img <- image_resize(resized_img, new_size)
-  image_write(resized_img, format <- "tif", path=paste0(resized_images_folder, "/", images_filenames[z]))
+for (z in 1:length(img_list)){
+  filename <- basename(img_list[[z]])
+  img <- image_read(img_list[[z]])
+  resized_img <- image_resize(img, new_size)
+  image_write(resized_img, format <- "tif", path=paste0(resized_images_folder, "/", filename))
 }
 
-for (q in 1:length(mask_path)){
-  #q=1
-  resized_mask <- image_read(mask_path$info$filename[q], strip = T)
-  resized_mask <- image_resize(resized_mask, new_size)
-  image_write(resized_mask, depth = 16, format <- "tif", path=paste0(resized_masks_folder, "/",images_filenames[q]))
+if (is.null(masks_path) == TRUE){}else{
+for (q in 1:length(msk_list)){
+  filename <- basename(msk_list[[q]])
+  msk <- image_read(msk_list[[q]], strip = TRUE)
+  resized_mask <- image_resize(msk, new_size)
+  image_write(resized_mask, depth = 16, format <- "tif", path=paste0(resized_masks_folder, "/",filename))
+ }
 }
-
 
 }
 ###########################################################################################
