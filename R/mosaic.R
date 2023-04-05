@@ -17,6 +17,13 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
     library(terra)
     suppressPackageStartupMessages({library(terra)})
   }
+  # install and load stringr
+  if (!require("stringr")){
+    install.packages("stringr")
+    library(stringr)
+    suppressPackageStartupMessages({library(stringr)})
+  }
+  
   
   
   img_output_directory <- paste0(dir, "/mosaicked_images/")
@@ -46,7 +53,6 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
       rx <- raster(patch_list_by_filename[j])
       list2[[j]] <- rx
       ## extract the patch position
-      library(stringr)
       position <- str_extract_all(basename(patch_list_by_filename[j]), 
                               ('(?<=\\(|,)[0-9]+(?=\\)|-?)'))[[1]] 
       row_no <- as.numeric(position[1])
@@ -65,3 +71,5 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
   }
   
 }
+
+
