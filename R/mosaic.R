@@ -53,7 +53,7 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
       rx <- raster(patch_list_by_filename[j])
       list2[[j]] <- rx
       ## extract the patch position
-      position <- str_extract_all(basename(patch_list_by_filename[j]), 
+      position <- stringr::str_extract_all(basename(patch_list_by_filename[j]), 
                               ('(?<=\\(|,)[0-9]+(?=\\)|-?)'))[[1]] 
       row_no <- as.numeric(position[1])
       col_no <- as.numeric(position[2])
