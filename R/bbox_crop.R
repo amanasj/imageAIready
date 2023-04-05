@@ -41,6 +41,12 @@ bbox_crop <- function(images_path,
     library(tidyverse)
     suppressPackageStartupMessages({library(tidyverse)})
   }
+  # install and load imager
+  if(!require("imager")){
+    install.packages("imager")
+    library(imager)
+    suppressPackageStartupMessages({library(imager)})
+  }
   
   
   
@@ -158,4 +164,3 @@ bbox_crop <- function(images_path,
   }
   
 }
-
