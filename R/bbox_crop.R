@@ -6,8 +6,8 @@
 ##### Function to input x=images to crop  and z=corresponding masks to crop
 bbox_crop <- function(images_path, 
                       masks_path, 
-                      w=500, 
-                      h=200, 
+                      width=500, 
+                      height=200, 
                       clean=1, 
                       fill=10, 
                       dir = dirname(images_path),
