@@ -63,7 +63,7 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
     # mosaic them, plot mosaic & save output
     list2$fun  <- max
     rast.mosaic <- do.call(terra::mosaic, list2)
-    plot(rast.mosaic, axes=F, legend=F, bty="n", box=FALSE)
+    #plot(rast.mosaic, axes=F, legend=F, bty="n", box=FALSE)
     writeRaster(rast.mosaic, filename=paste0(img_output_directory, filenames0[i]), 
                 format="GTiff", datatype='INT1U', overwrite=TRUE)
     
