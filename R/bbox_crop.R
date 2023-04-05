@@ -35,6 +35,12 @@ bbox_crop <- function(images_path,
     library(xml2)
     suppressPackageStartupMessages({library(xml2)})
   }
+  # install and load tidyverse
+  if(!require("tidyverse")){
+    install.packages("tidyverse")
+    library(tidyverse)
+    suppressPackageStartupMessages({library(tidyverse)})
+  }
   
   
   
@@ -152,3 +158,4 @@ bbox_crop <- function(images_path,
   }
   
 }
+
