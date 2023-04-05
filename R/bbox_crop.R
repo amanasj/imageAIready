@@ -29,6 +29,12 @@ bbox_crop <- function(images_path,
     library(EBImage)
     suppressPackageStartupMessages({library(EBImage)})
   }
+  # install and load xml2
+  if(!require("xml2")){
+    install.packages("xml2")
+    library(xml2)
+    suppressPackageStartupMessages({library(xml2)})
+  }
   
   
   
