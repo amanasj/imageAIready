@@ -4,7 +4,7 @@
 ######################## Mosaic all patches back together again ##########################
 ##########################################################################################
 
-mosaic <- function(patched_images_folder_path, dir){
+mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
   
   # install and load raster
   if (!require("raster")){
@@ -12,12 +12,18 @@ mosaic <- function(patched_images_folder_path, dir){
     library(raster)
     suppressPackageStartupMessages({library(raster)})
   }
+    # install and load terra
+  if (!require("terra")){
+    install.packages("terra")
+    library(terra)
+    suppressPackageStartupMessages({library(terra)})
+  }
   
   
   img_output_directory <- paste0(dir, "/mosaicked_images/")
   dir.create(img_output_directory)
   
-patch_list <- list.files(patched_images_folder_path, pattern = ".tif", full.names = T)
+patch_list <- list.files(patched_images_folder, pattern = ".tif", full.names = T)
 
 
 ### identify common filenames to mosaic together
@@ -29,7 +35,7 @@ filenames <- unique(unlist(filenames))
 
 
 for (i in length(filenames)){
-patch_list_by_filename <- list.files(patched_images_folder_path, 
+patch_list_by_filename <- list.files(patched_images_folder, 
                                      pattern = paste0(filenames[i]),
                                      full.names = T)
 
@@ -50,16 +56,6 @@ writeRaster(rast.mosaic,filename=paste0(img_output_directory,"/", filenames[i]),
   }
 
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
