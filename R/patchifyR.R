@@ -144,7 +144,7 @@ patchifyR <- function(images_path,
     for(j in 1:length(my_patches_img[[i]]$patches)){
       writeRaster(my_patches_img[[i]]$patches[[j]], paste0(img_output_directory, my_patches_img[[i]]$names[[j]], ".tif"), 
                   drivername="Gtiff", overwrite=TRUE, datatype='INT1U')
-      if(missing(mask_path)){}else{
+      if(missing(masks_path)){}else{
         writeRaster(my_patches_mask[[i]]$patches[[j]], paste0(mask_output_directory, my_patches_mask[[i]]$names[[j]], ".tif"), 
                     drivername="Gtiff", overwrite=TRUE, datatype='INT1U')
       }
