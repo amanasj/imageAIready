@@ -74,7 +74,7 @@ mosaicR <- function(patched_images_folder, dir=dirname(patched_images_folder)){
     #plot(rast.mosaic)
     terra::plotRGB(rast.mosaic)
     writeRaster(rast.mosaic, filename=paste0(img_output_directory, filenames0[i], ".tiff"), 
-                overwrite=TRUE, datatype='INT1U')
+                overwrite=TRUE, datatype='INT2U')
     
 
   }
