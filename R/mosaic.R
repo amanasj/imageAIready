@@ -41,7 +41,7 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
   
   
   for (i in 1:length(filenames0)){
-    i=3
+    #i=3
     patch_list_by_filename <- list.files(patched_images_folder, 
                                          pattern = paste0(filenames0[i]),
                                          full.names = T)
