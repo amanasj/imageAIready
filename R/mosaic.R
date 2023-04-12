@@ -74,3 +74,4 @@ mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
   
 }
 
+
