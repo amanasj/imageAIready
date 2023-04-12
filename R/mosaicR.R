@@ -3,7 +3,7 @@
 ######################## Mosaic all patches back together again ##########################
 ##########################################################################################
 
-mosaic <- function(patched_images_folder, dir=dirname(patched_images_folder)){
+mosaicR <- function(patched_images_folder, dir=dirname(patched_images_folder)){
   
   # install and load raster
   if (!require("raster")){
