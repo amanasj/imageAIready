@@ -1,4 +1,3 @@
-
 ##############################################################################
 ########### use bbox to find retina and crop everything else out ############
 #############################################################################
@@ -10,7 +9,7 @@ bbox_crop <- function(images_path,
                       height=200, 
                       clean=1, 
                       fill=10, 
-                      dir = dirname(images_path),
+                      destin = dirname(images_path),
                       heyex_xml_file = FALSE) {
   
   
@@ -50,9 +49,12 @@ bbox_crop <- function(images_path,
   
   
   
-  dir.create(paste0(dir, "/bboxcropped_images/"))
-  dir.create(paste0(dir, "/bboxcropped_images/images/")) 
+  eye <- substring(images_path, nchar(images_path)-1)
   
+  dir.create(paste0(destin, "/bboxcropped_images/"))
+  dir.create(paste0(destin, "/bboxcropped_images/", eye, "/"))
+  dir.create(paste0(destin, "/bboxcropped_images/",eye,"/cropped_images/")) 
+  dir.create(paste0(destin, "/bboxcropped_images/",eye,"/cropped_images/images/"))
   
   
   #### use to temporarily suppress warnings arising from raster extent
@@ -96,12 +98,13 @@ bbox_crop <- function(images_path,
   
   
   for (i in 1:length(images)){
-    xx <- raster(images[i])
+    #i=1
+    xx <- suppressWarnings(raster(images[i])) 
     filename_image <- basename(images[i])
-    xx <- as.cimg(xx) %>% plot()
-    px <- threshold(xx) %>% plot
+    xx <- suppressWarnings(as.cimg(xx)) %>% plot()
+    px <- threshold(xx) #%>% plot
     px <- clean(px,clean) %>% imager::fill(fill)    ####### TWEAK this if retina not segmenting properly
-    plot(px)
+    #plot(px)
     px <- px > 0.1
     sp <- split_connected(px) #returns an imlist 
     ### find the largest contiguous pixset (retina) and fit a bounding box
@@ -116,18 +119,22 @@ bbox_crop <- function(images_path,
     bbox <- imager::bbox(sp[[largest]]) 
     bbox %>% imager::highlight(col="yellow")
     box <- where(bbox)
-    min_x <- min(box$x)-1
-    max_x <- max(box$x)
+    min_x <- 0          #min(box$x)
+    max_x <- nrow(xx)   #max(box$x)
     min_y <- min(box$y)
     max_y <- max(box$y)
     #### crop image according to bbox y coords
-    cropped <- imager::imsub(xx, x>min_x & x<max_x+1, y>min_y-5 & y<max_y+1) %>% plot()
+    #cropped <- imager::imsub(xx, x>min_x & x<max_x+1, y>min_y-5 & y<max_y+1) %>% plot()
+    cropped <- imager::imsub(xx, y>min_y-5 & y<max_y+1) %>% plot()
     p <- as.raster(cropped) 
     p <- plot(cropped)
     p <- EBImage::resize(p, w=width, h=height)
     p <- lidaRtRee::cimg2Raster(p)
+
     
-    writeRaster(p, paste0(dir,"/bboxcropped_images/images/", filename_image), overwrite=T, datatype='INT1U')
+    writeRaster(p, paste0(destin,"/bboxcropped_images/", eye, "/cropped_images/images/", filename_image), 
+                overwrite=T, 
+                datatype='INT1U')
     
     
     
@@ -142,7 +149,8 @@ bbox_crop <- function(images_path,
       filename_mask <- basename(masks[i])
       #### crop image according to bbox y coords
       zz <- as.cimg(zz)
-      cropped <- imager::imsub(zz, x>min_x & x<max_x+1, y>min_y-5 & y<max_y+1) %>% plot()
+      #cropped <- imager::imsub(zz, x>min_x & x<max_x+1, y>min_y-5 & y<max_y+1) %>% plot()
+      cropped <- imager::imsub(zz, y>min_y-5 & y<max_y+1) %>% plot()
       q <- as.raster(cropped) 
       q <- plot(cropped)
       q <- EBImage::resize(q, w=width, h=height)
@@ -153,14 +161,20 @@ bbox_crop <- function(images_path,
                 "----------------------------", "", sep="\n"))
       
       
-      dir.create(paste0(dir, "/bboxcropped_images/masks/")) 
-      writeRaster(q, paste0(dir, "/bboxcropped_images/masks/" ,filename_mask), overwrite=T, datatype='INT1U')
+      dir.create(paste0(destin, "/bboxcropped_images/", eye, "/masks/")) 
+      writeRaster(q, paste0(destin, "/bboxcropped_images/", eye, "/masks/" ,filename_mask), overwrite=T, datatype='INT1U')
       
       
       
     }
+    
+    ## turn global warnings back on
     options(warn=warn)
     
   }
   
 }
+
+
+
+
