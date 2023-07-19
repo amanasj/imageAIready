@@ -1,3 +1,4 @@
+
 #############################################################################
 ######################## Find ORT  ##########################
 #############################################################################
@@ -5,6 +6,7 @@
 
 findORT <- function(predictions,
                     heyex_images_folder, 
+                    bbox_full_images_folder,
                     ORT_size_min = 100){
   
   
@@ -62,9 +64,13 @@ findORT <- function(predictions,
         ExamURL <- paste0(ExamURL, ".tif")
         ExamURL_full <- paste0(heyex_images_folder, "\\", ExamURL)
         ### find how wide original image was
-        meta <- magick::image_read(ExamURL_full)
-        w_orig <- as.numeric(magick::image_info(meta)[2])
-        h_orig <- as.numeric(magick::image_info(meta)[3])
+        meta_orig <- magick::image_read(ExamURL_full)
+        w_orig <- as.numeric(magick::image_info(meta_orig)[2])
+        h_orig <- as.numeric(magick::image_info(meta_orig)[3])
+        ExamURL_bbox <- paste0(bbox_full_images_folder, ExamURL)
+        meta_bbox <- magick::image_read(ExamURL_bbox)
+        w_bbox <- as.numeric(magick::image_info(meta_bbox)[2])
+        h_bbox <- as.numeric(magick::image_info(meta_bbox)[3])
         px <- as.raster(binary)
         px <- suppressWarnings(imager::as.cimg(px)) %>% plot()
         px <- threshold(px, thr = "95%") %>% plot
@@ -78,8 +84,8 @@ findORT <- function(predictions,
           
           
           ### loop over all split connected regions (masks) to apply bounding box to each
-          ORT_coords <- list()
-          ORT_coords_temp <- list()  
+          ORT_coords_bbox <- list()
+          ORT_coords_bbox_temp <- list()  
           for (k in 1:length(sp)){  
             #k=1
             #highlight(sp[[k]])
@@ -102,21 +108,23 @@ findORT <- function(predictions,
           brackets <- as.numeric(brackets)
           patch_vert <- brackets[1]
           patch_horiz <- brackets[2]
-          
           ### infer no. of tiles horiz and vert (remember images were possibly resized
           ### so figures won't necessarily be integer values - so round off)
-          tiles_horiz <- w_orig / w 
-          tiles_vert <- round(h_orig / h)
+          tiles_horiz <- w_bbox / w 
+          tiles_vert <-  h_bbox / h
           ### so ORT position in overall image given by
-          ORT_horiz <- ((w_orig/tiles_horiz)*(patch_horiz-1))+box_x_centre
-          ORT_vert <- ((h_orig/tiles_vert)*(patch_vert-1))+box_y_centre
-          ORT_coords_one <- cbind(file=ExamURL, x=ORT_horiz, y=ORT_vert)
+          ORT_horiz_bbox <- ((w_bbox/tiles_horiz)*(patch_horiz-1))+box_x_centre
+          ORT_vert_bbox <- ((h_bbox/tiles_vert)*(patch_vert-1))+box_y_centre
+          ORT_horiz_orig <- (ORT_horiz_bbox/w_bbox) * w_orig
+          ORT_vert_orig <-  (ORT_vert_bbox/h_bbox) * h_orig
+          ORT_coords_one <- cbind(file=ExamURL, x=ORT_horiz_orig, y=ORT_vert_orig)
           ORT_coords_temp <- list(ORT_coords_one)
           ORT_coords_temp <- ORT_coords_temp[lapply(ORT_coords_temp,length)>0]
           
 
           ORT_coords[k] <- list(ORT_coords_temp) 
-          }    ## loop over k ORTs per patch   
+          
+                    }    ## loop over k ORTs per patch   
       
                ORT[i] <- list(ORT_coords) 
           } 
@@ -127,6 +135,7 @@ findORT <- function(predictions,
 
   ORT_df <- data.frame(matrix(unlist(ORT), nrow=sum(lengths(ORT)), byrow=TRUE))
   colnames(ORT_df) <- c("ExamURL", "ORT_x","ORT_y")
+  ORT_df[2:3] <- sapply(ORT_df[2:3],as.numeric)
 
       
       
@@ -146,6 +155,5 @@ findORT <- function(predictions,
   
   
 } ## end findORT function 
-
 
 
