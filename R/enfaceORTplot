@@ -1,3 +1,4 @@
+
 ##########################################################################################
 ######################## Find ORT and overlay onto original images ##########################
 ##########################################################################################
@@ -57,6 +58,12 @@ enfaceORTplot <- function(ORT_data_F,
     install_github("amanasj/readheyexxml")
     library(readheyexxml)
   }
+  # install and load grid
+  if (!require("grid")){
+    install.packages("grid")
+    library(grid)
+    suppressPackageStartupMessages({library(grid)})
+  }
   
   
 
@@ -70,7 +77,10 @@ heyex_data <- readheyexxml::readheyexxml(folder = heyex_images_folder)
 df_ORT <- merge(heyex_data$data, ORT_data_F, by=c("ExamURL"))
 df_ORT <- df_ORT[gtools::mixedorder(df_ORT$ID),]
 df_ORT[c(2:5,7:18)] <- sapply(df_ORT[c(2:5,7:18)],as.numeric)
+df_ORT$x_coord <- (df_ORT$ORT_x * df_ORT$scalex_enface[1]) + df_ORT$plot_start_x[1]
+
 ORT_count <- nrow(df_ORT)
+
  ######
  ######
  # Note that the first bscan starts at the bottom of the enface image even though the (0,0) coord 
@@ -78,10 +88,11 @@ ORT_count <- nrow(df_ORT)
  ######
  ######
 
-
-
 ### Display enface image
 enface_image <- EBImage::readImage(df_ORT$ExamURL_enface[1])
+dim <- dim(enface_image)
+h <- dim[1]
+w <- dim[2]
 plot(enface_image)
 h1 <- df_ORT$h1[1]
 h2 <- df_ORT$h2[1]
@@ -100,6 +111,7 @@ enface_image[,,4] = 0.75
 #EBImage::display(enface_img_crop)
 ### weird matrix rotation occurs in rasterGrob below so pre-rotate
 enface_img_rotated <- EBImage::transpose(enface_image)
+#enface_img_rotated <- enface_image
 ### use rasterGrob to prepare image for overlaying with ggplot
 ### using annotation_custom
 ### calc image centring positions x & y in rasterGrob
@@ -108,18 +120,17 @@ g <- grid::rasterGrob(enface_img_rotated,
                       y = unit(0.5, "npc"),
                       height = 1, width = 1)
 
-library(grid)
 
 
 coord_cartesian <- coord_cartesian(
-  xlim = c(0, 1536*heyex_data$data$scalex_enface[1]),
-  ylim = c(1536*heyex_data$data$scaley_enface[1], 0),
+  xlim = c(0, w*heyex_data$data$scalex_enface[1]),
+  ylim = c(h*heyex_data$data$scaley_enface[1], 0),
   expand = F, clip="on")
 #############################################################
 ######################## ggplot #############################
 ORT_plot <- 
   ggplot(data=df_ORT) +
-  geom_circle(aes(x0 = (ORT_x*heyex_data$data$scalex_enface[1]) + heyex_data$data$plot_start_x[1], 
+  geom_circle(aes(x0 = x_coord, 
                   y0 = y_coord, 
                   r=0.06), fill="green4") +
   coord_fixed() +
