@@ -43,6 +43,7 @@ findORT <- function(predictions,
   ORT <- list()
   ORT_df <- data.frame()
   ORT_data_F <- data.frame()
+  ORT_coords <- list()
 
     
 
@@ -81,8 +82,7 @@ findORT <- function(predictions,
           ORT[i] <- list(list(list(c(0,0,0))))
         } else { 
           sp <- imager::split_connected(px)
-          
-          
+            if(length(sp)!=0){
           ### loop over all split connected regions (masks) to apply bounding box to each
           ORT_coords_bbox <- list()
           ORT_coords_bbox_temp <- list()  
@@ -127,6 +127,7 @@ findORT <- function(predictions,
                     }    ## loop over k ORTs per patch   
       
                ORT[i] <- list(ORT_coords) 
+            }else{ORT[i] <- list(list(list(c(0,0,0))))}
           } 
           
 
@@ -155,5 +156,6 @@ findORT <- function(predictions,
   
   
 } ## end findORT function 
+
 
 
