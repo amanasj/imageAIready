@@ -174,3 +174,4 @@ mosaicR <- function(patches_folder,
   
 }
 
+
