@@ -51,7 +51,7 @@ findORT <- function(predictions,
 #### cycle through all images
 
   for (i in 1:length(predictions$summary$filename)){        ### cycles through all patches
-    #i=12
+        #i=2 #troubleshooting
 
       
       ################################################################
@@ -87,10 +87,13 @@ findORT <- function(predictions,
           ORT_coords_bbox <- list()
           ORT_coords_bbox_temp <- list()  
           for (k in 1:length(sp)){  
-            #k=1
-            #highlight(sp[[k]])
-            bbox(sp[[k]]) %>% highlight(col="yellow")
-            box <- where(bbox(sp[[k]])) 
+            #k=1   #troubleshooting
+            highlight(sp[[k]])
+            
+            #### bbox(sp[[k]]) %>% highlight(col="yellow")
+            #### box <- where(bbox(sp[[k]]))
+            box <- where(sp[[k]])   ### new line in place of above 2 lines gets code working again
+            
             box <- box[c(box$cc==1),]
             box_width <- max(box$x) - min(box$x)
             box_height <- max(box$y) - min(box$y)
