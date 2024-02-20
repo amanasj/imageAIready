@@ -3,7 +3,7 @@
 ######################## Find ORT and overlay onto original images ##########################
 ##########################################################################################
 
-enfaceORTplot <- function(ORT_data_F,
+enfaceORTplot <- function(ORT_coords,
                           heyex_images_folder,
                           destin=dirname(heyex_images_folder))
   {
@@ -74,7 +74,7 @@ enfaceORTplot <- function(ORT_data_F,
 heyex_data <- readheyexxml::readheyexxml(folder = heyex_images_folder)
 
 ### find bscan number (y-position) by matching to first dataframe created by readheyex function
-df_ORT <- merge(heyex_data$data, ORT_data_F, by=c("ExamURL"))
+df_ORT <- merge(heyex_data$data, ORT_coords, by=c("ExamURL"))
 df_ORT <- df_ORT[gtools::mixedorder(df_ORT$ID),]
 df_ORT[c(2:5,7:18)] <- sapply(df_ORT[c(2:5,7:18)],as.numeric)
 df_ORT$x_coord <- (df_ORT$ORT_x * df_ORT$scalex_enface[1]) + df_ORT$plot_start_x[1]
