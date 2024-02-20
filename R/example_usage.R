@@ -2,7 +2,7 @@
 #############################################################
 #############################################################
 #devtools::install_github("amanasj/imageAIready", force=T)
-library(imageAIready)
+#library(imageAIready)
 library(readheyexxml)
 library(keras)
 ##############################################################
