@@ -48,16 +48,11 @@ predictions_overlay <- function(images_folder,
     
     
     
-    #### use to temporarily suppress warnings arising from raster extent
-    warn = getOption("warn")
-    options(warn=-1)
-  
     
-    
-    ORT_list <- list() 
+
     for (i in 1:length(predictions$summary$filename)){
     
-    i=94 #~~~~~ troubleshooting
+    #i=2 #~~~~~ troubleshooting
     im_i <- paste0(images_folder, basename(predictions$summary$filename[i]), sep="")
     im_i <- image_read(im_i)
     w <- as.numeric(image_info(im_i)[2])
@@ -69,27 +64,9 @@ predictions_overlay <- function(images_folder,
     pr <- magick::image_resize(pr, dimen)
     #pr
     
-    ################ find location of binary ORT
-    px <- as.raster(predictions$prediction_binary[i])
-    px <- suppressWarnings(as.cimg(px)) %>% plot()
-    #px <- threshold(px) #%>% plot
-    px <- px>0.1
-    sp <- imager::split_connected(px)
-    if(sum(px)!=0 & length(sp)!=0){
-    bbox <- imager::bbox(sp[[1]]) 
-    bbox %>% imager::highlight(col="yellow")
-    box <- where(bbox)
-    box_x_centre <- (max(box$x)-min(box$x))/2 + min(box$x)
-    box_y_centre <- (max(box$y)-min(box$y))/2 + min(box$y)
-    ### find ratio of box_x_centre to overall image x dim. This will 
-    ### translate to the same position regardless of any image resizing later
-    ORT_x_ratio <- box_x_centre/w
-    ORT_list[[i]] <- ORT_x_ratio
-      }else{
-    ORT_list[[i]] <- NA 
-    }
-    ################
 
+    
+    
     combine <- c(im_i, pr)
     magick::image_append(combine, stack = T)
     overlay <- combine %>% magick::image_composite(combine, operator = "plus", 
@@ -98,9 +75,6 @@ predictions_overlay <- function(images_folder,
     
     #predictions$prediction_binary[i]
     #overlay[2]
-    
-    ### create a dataframe of chosen attributes
-    ORT_list[[i]]$patch_no <- i_name
     
     
   
@@ -113,16 +87,8 @@ predictions_overlay <- function(images_folder,
   }
   
     
+  
     
-    ORT <- unlist(ORT_list)
-    ORT <- data.frame(patch_no = ORT[c(FALSE, TRUE)], 
-                      ORT_position = ORT[c(TRUE, FALSE)])
-    
-    return(ORT)
-    
-    
-  ## turn global warnings back on
-  options(warn=warn)
   
 }
 
@@ -131,5 +97,5 @@ predictions_overlay <- function(images_folder,
 ###########################################################################################
 ###########################################################################################
 ############################### End of predictions_overlay ################################
-#############
-
+###########################################################################################
+###########################################################################################
