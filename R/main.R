@@ -1,5 +1,4 @@
-rm(list = ls(all = TRUE))
-gc()
+
 library(tidyverse)
 library(imager)
 library(here)
