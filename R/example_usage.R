@@ -197,7 +197,8 @@ save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
 ####################### overlay ORT onto enface image  ##########################
 #################################################################################
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
-enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F,
+ORT_coords <- as.data.frame(ORT_data_F[1])
+enfaceORTplot <- imageAIready::enfaceORTplot(ORT_coords = ORT_coords,
                                              heyex_images_folder = heyex_images_folder)
 #################################################################################
 #################################################################################
