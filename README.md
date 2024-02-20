@@ -43,7 +43,7 @@ library(keras)
 <br><br>
 
 
-#### input patient file below 
+### input patient file below 
 <br>
 ##############################################################
 <br>
@@ -58,7 +58,7 @@ eye <- "OD"
 <br>
 
 
-#### filepath to patient 
+### filepath to patient 
 <br>
 ###############################
 <br>
@@ -76,17 +76,19 @@ images_path <- file.path(paste0(filepath,"\\",eye))
 
 
 
-#-------------------------------------------------------------
+-------------------------------------------------------------
 <br>
-###   apply a load of my custom imageAIready packages
+
+##   apply a load of my custom imageAIready packages
+
 <br>
-#-------------------------------------------------------------
+-------------------------------------------------------------
 
 
 <br><br>
 
 
-#### read heyex xml folder along with metadata 
+### read heyex xml folder along with metadata 
 <br>
 ##########################################################
 <br>
@@ -102,7 +104,7 @@ readheyexxml <- readheyexxml(images_path)
 
 
 
-#### resize images 
+### resize images 
 <br>
 #################################
 <br>
@@ -116,7 +118,7 @@ resize <- imageAIready::resize(images_path,  width = 1024, height = 512, destin 
 
 
 
-#### apply a bounding box function to remove black areas 
+### apply a bounding box function to remove black areas 
 <br>
 ###########################################################################
 <br>
@@ -130,7 +132,7 @@ bbox <- imageAIready::bbox_crop(images_path = images_path, width = 1024, height 
 
 
 
-#### split into patches 
+### split into patches 
 <br>
 ##########################################
 <br>
@@ -146,7 +148,7 @@ patches <- imageAIready::patchifyR(images_path = bbox_images_folder, patch_size 
 
 
 
-#### AI predictions (Load in images to test)
+### AI predictions (Load in images to test)
 <br>
 #################################
 <br>
@@ -173,7 +175,7 @@ predictions <- imageAIready::imageSegmentation_v2(model=model, x=images, thresho
 
 
 
-#### save predicted images as overlay images using the predictions_overlay function   
+### save predicted images as overlay images using the predictions_overlay function   
 <br>
 ######################################################################################
 <br>
@@ -188,7 +190,7 @@ ORT <- imageAIready::predictions_overlay(images_folder=images_folder, prediction
 
 
 
-#### Mosaic patches back together 
+### Mosaic patches back together 
 <br>
 ##################################################
 <br>
@@ -203,7 +205,7 @@ mosaic <- imageAIready::mosaicR(patches_folder = patches_folder)
 
 
 
-#### Find ORT positions directly from predictions 
+### Find ORT positions directly from predictions 
 <br>
 ##############################################################
 <br>
@@ -222,7 +224,7 @@ save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
 
 
 
-#### overlay ORT onto enface image  
+### overlay ORT onto enface image  
 <br>
 #####################################################
 <br>
@@ -237,7 +239,7 @@ enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F, heyex_imag
 
 
 
-#### remove bbox and resize folders 
+### remove bbox and resize folders 
 <br>
 ################################################
 <br>
