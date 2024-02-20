@@ -44,7 +44,7 @@ library(keras)
 
 ##############################################################
 <br>
-################# input patient file below ###################
+##### input patient file below 
 <br>
 ##############################################################
 <br>
@@ -60,7 +60,7 @@ eye <- "OD"
 
 ###############################
 <br>
-####### filepath to patient 
+##### filepath to patient 
 <br>
 ###############################
 
@@ -81,7 +81,7 @@ images_path <- file.path(paste0(filepath,"\\",eye))
 
 #-------------------------------------------------------------
 <br>
-#       apply a load of my custom imageAIready packages
+###   apply a load of my custom imageAIready packages
 <br>
 #-------------------------------------------------------------
 
@@ -90,7 +90,7 @@ images_path <- file.path(paste0(filepath,"\\",eye))
 
 ##########################################################
 <br>
-####### read heyex xml folder along with metadata ########
+##### read heyex xml folder along with metadata 
 <br>
 ##########################################################
 <br>
@@ -107,7 +107,7 @@ readheyexxml <- readheyexxml(images_path)
 
 #################################
 <br>
-######### resize images #########
+##### resize images 
 <br>
 #################################
 <br>
@@ -128,7 +128,7 @@ resize <- imageAIready::resize(images_path,
 
 #############################################################################################
 <br>
-################## apply a bounding box function to remove black areas ######################
+##### apply a bounding box function to remove black areas 
 <br>
 #############################################################################################
 <br>
@@ -146,111 +146,163 @@ bbox <- imageAIready::bbox_crop(images_path = images_path,
 
 
 
+<br><br>
+
+
+##########################################
 <br>
-
-
-#####################################################################################
-############################### split into patches ##################################
-#####################################################################################
+##### split into patches 
+<br>
+##########################################
+<br>
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\images\\")
+<br>
 patches <- imageAIready::patchifyR(images_path = bbox_images_folder,
+<br>  
                                    patch_size = 256,
+<br>    
                                    heyex_xml_file = F,
+<br>                                   
                                    destin = dirname(bbox_images_folder))
-
+<br>
 #####################################################################################
-#####################################################################################
 
 
+
+<br><br>
+
+
+#################################
+<br>
+##### AI predictions 
+<br>
+#################################
 <br>
 
-
-###########################################################################################
-#################################### AI predictions #######################################
-###########################################################################################
-##### Load in images to test 
+###### Load in images to test 
+<br>
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
+<br>
 images <- imageseg::loadImages(bbox_images_folder)
+<br>
 images <- imageseg::imagesToKerasInput(images, type = "image", grayscale = F)
+<br>
 model <- keras::load_model_hdf5("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\Unet_ort\\Rscripts\\trained_models\\ort_model_unet_from_scratch.hdf5", compile = F)
+<br>
+  
+######  NOTE: imageSegementation from imageseg package not working for me, so edited package
 
-###  NOTE: imageSegementation from imageseg package not working for me, so edited package
-###        by adding .ragged=TRUE and saved new function as v2
+<br>
+
+######        by adding .ragged=TRUE and saved new function as v2
+
+<br>
+
 predictions <- imageAIready::imageSegmentation_v2(model=model, x=images, threshold = 0.9)
+<br>
 #predictions
-############################################################################################
-############################################################################################
-
-
 <br>
+############################################################################################
 
 
-###########################################################################################################
-###################### save predicted images as overlay images using ######################################
-######################      the predictions_overlay function         ######################################
-###########################################################################################################
-images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
-ORT <- imageAIready::predictions_overlay(images_folder=images_folder, 
-                                         predictions=predictions, 
-                                         destin = dirname(dirname(images_folder)))
-###########################################################################################################
-###########################################################################################################
 
-
-<br>
+<br><br>
 
 
 #########################################################################################
-########################### Mosaic patches back together ################################
-########################################################################
+<br>
+##### save predicted images as overlay images using the predictions_overlay function    
+<br>
+#########################################################################################
+<br>
+images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
+<br>
+ORT <- imageAIready::predictions_overlay(images_folder=images_folder, 
+<br>
+                                         predictions=predictions, 
+<br>                                         
+                                         destin = dirname(dirname(images_folder)))
+<br>                                         
+##########################################################################################
+
+
+<br><br>
+
+
+##################################################
+<br>
+##### Mosaic patches back together 
+<br>
+##################################################
+<br>
 patches_folder <- paste0(filepath,"/bboxcropped_images/",eye,"/cropped_images/AI_predictions/patches/")
+<br>
 mosaic <- imageAIready::mosaicR(patches_folder = patches_folder)
-########################################################################################
-########################################################################################
-
-
 <br>
+##########################################################################
 
 
-###############################################################################################
-##################### Find ORT positions directly from predictions ############################
-###############################################################################################
+<br><br>
+
+
+################################################################
+<br>
+##### Find ORT positions directly from predictions 
+<br>
+################################################################
+<br>
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
+<br>
 bbox_full_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\images\\")
+<br>
 ORT_data_F    <-  imageAIready::findORT(predictions,
+<br>
                                         heyex_images_folder = heyex_images_folder,
+<br>                                        
                                         bbox_full_images_folder = bbox_full_images_folder,
+<br>                                        
                                         ORT_size_min = 200)
-
+<br>
 save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
-##############################################################################################
-##############################################################################################
-
-
 <br>
+################################################################################
 
 
-#################################################################################
-####################### overlay ORT onto enface image  ##########################
-#################################################################################
+<br><br>
+
+
+#####################################################
+<br>
+##### overlay ORT onto enface image  
+<br>
+#####################################################
+<br>
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
+<br>
 enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F,
+<br>
                                              heyex_images_folder = heyex_images_folder)
-#################################################################################
-#################################################################################
+<br>
+#################################################################
 
+
+<br><br>
+
+
+#################################################
+<br>
+##### remove bbox and resize folders 
+<br>
+#################################################
+<br>
+root <- dirname(images_path)
+<br>
+unlink(file.path(paste0(root,"/bboxcropped_images/")), recursive = T)
+<br>
+unlink(file.path(paste0(root,"/resized_images/")), recursive = T)
+<br>
+###############################################################
 
 <br>
-
-
-##################################################################################
-###################### remove bbox and resize folders ############################
-##################################################################################
-root <- dirname(images_path)
-unlink(file.path(paste0(root,"/bboxcropped_images/")), recursive = T)
-unlink(file.path(paste0(root,"/resized_images/")), recursive = T)
-##################################################################################
-##################################################################################
-
 
 <br><br>
