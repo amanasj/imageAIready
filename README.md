@@ -103,14 +103,8 @@ readheyexxml <- readheyexxml(images_path)
 #### resize images 
 #################################
 <br>
-resize <- imageAIready::resize(images_path, 
-  <br>
-                               width = 1024, 
-  <br>
-                               height = 512,
-  <br>
-                               destin = dirname(images_path))
-  <br>
+resize <- imageAIready::resize(images_path,  width = 1024, height = 512, destin = dirname(images_path))
+<br>
 ##########################################################
 
 
@@ -122,15 +116,7 @@ resize <- imageAIready::resize(images_path,
 #### apply a bounding box function to remove black areas 
 #############################################################################################
 <br>
-bbox <- imageAIready::bbox_crop(images_path = images_path, 
-<br>
-                                width = 1024, 
-<br>
-                                height = 512, 
-<br>                                
-                                heyex_xml_file = T,
-<br>                                
-                                destin = dirname(images_path))
+bbox <- imageAIready::bbox_crop(images_path = images_path, width = 1024, height = 512, heyex_xml_file = T, destin = dirname(images_path))
 <br>
 ############################################################################################
 
@@ -145,13 +131,7 @@ bbox <- imageAIready::bbox_crop(images_path = images_path,
 <br>
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\images\\")
 <br>
-patches <- imageAIready::patchifyR(images_path = bbox_images_folder,
-<br>  
-                                   patch_size = 256,
-<br>    
-                                   heyex_xml_file = F,
-<br>                                   
-                                   destin = dirname(bbox_images_folder))
+patches <- imageAIready::patchifyR(images_path = bbox_images_folder, patch_size = 256, heyex_xml_file = F, destin = dirname(bbox_images_folder))
 <br>
 #####################################################################################
 
@@ -201,11 +181,7 @@ predictions <- imageAIready::imageSegmentation_v2(model=model, x=images, thresho
 <br>
 images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
 <br>
-ORT <- imageAIready::predictions_overlay(images_folder=images_folder, 
-<br>
-                                         predictions=predictions, 
-<br>                                         
-                                         destin = dirname(dirname(images_folder)))
+ORT <- imageAIready::predictions_overlay(images_folder=images_folder, predictions=predictions, destin = dirname(dirname(images_folder)))
 <br>                                         
 ##########################################################################################
 
@@ -235,13 +211,7 @@ heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
 <br>
 bbox_full_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\images\\")
 <br>
-ORT_data_F    <-  imageAIready::findORT(predictions,
-<br>
-                                        heyex_images_folder = heyex_images_folder,
-<br>                                        
-                                        bbox_full_images_folder = bbox_full_images_folder,
-<br>                                        
-                                        ORT_size_min = 200)
+ORT_data_F    <-  imageAIready::findORT(predictions, heyex_images_folder = heyex_images_folder, bbox_full_images_folder = bbox_full_images_folder, ORT_size_min = 200)
 <br>
 save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
 <br>
@@ -257,9 +227,7 @@ save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
 <br>
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
 <br>
-enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F,
-<br>
-                                             heyex_images_folder = heyex_images_folder)
+enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F, heyex_images_folder = heyex_images_folder)
 <br>
 #################################################################
 
