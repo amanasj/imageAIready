@@ -1,8 +1,6 @@
 ###
 ### create animation from en-face images
 ###
-rm(list = ls(all = TRUE))
-gc()
 library(magick)
 library(gtools)
 library(stringr)
