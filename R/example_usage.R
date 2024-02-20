@@ -1,8 +1,6 @@
 
 #############################################################
 #############################################################
-rm(list = ls(all = TRUE))
-gc()
 #devtools::install_github("amanasj/imageAIready", force=T)
 library(imageAIready)
 library(readheyexxml)
