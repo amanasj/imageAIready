@@ -124,7 +124,7 @@ patches <- imageAIready::patchifyR(images_path = bbox_images_folder,
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
 images <- imageseg::loadImages(bbox_images_folder)
 images <- imageseg::imagesToKerasInput(images, type = "image", grayscale = F)
-model <- keras::load_model_hdf5("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\Unet_ort\\Rscripts\\trained_models\\ort_model_unet_from_scratch.hdf5", compile = F)
+model <- keras::load_model_hdf5("", compile = F)
 
 ###  NOTE: imageSegementation from imageseg package not working for me, so edited package
 ###        by adding .ragged=TRUE and saved new function as v2
