@@ -43,7 +43,6 @@ findORT <- function(predictions,
   ORT <- list()
   ORT_df <- data.frame()
   ORT_data_F <- data.frame()
-  ORT_coords <- list()
 
     
 
@@ -51,7 +50,7 @@ findORT <- function(predictions,
 #### cycle through all images
 
   for (i in 1:length(predictions$summary$filename)){        ### cycles through all patches
-        #i=2 #troubleshooting
+        #i=4 #troubleshooting
 
       
       ################################################################
@@ -85,15 +84,14 @@ findORT <- function(predictions,
             if(length(sp)!=0){
           ### loop over all split connected regions (masks) to apply bounding box to each
           ORT_coords_bbox <- list()
-          ORT_coords_bbox_temp <- list()  
+          ORT_coords_bbox_temp <- list() 
+          ORT_coords_temp <- list() 
+          ORT_coords <- list()
           for (k in 1:length(sp)){  
             #k=1   #troubleshooting
-            highlight(sp[[k]])
-            
-            #### bbox(sp[[k]]) %>% highlight(col="yellow")
-            #### box <- where(bbox(sp[[k]]))
-            box <- where(sp[[k]])   ### new line in place of above 2 lines gets code working again
-            
+            highlight(sp[[k]], col="yellow")
+            #imager::bbox(sp[[k]]) %>% highlight(col="yellow")
+            box <- where(imager::bbox(sp[[k]]))
             box <- box[c(box$cc==1),]
             box_width <- max(box$x) - min(box$x)
             box_height <- max(box$y) - min(box$y)
@@ -111,7 +109,7 @@ findORT <- function(predictions,
           brackets <- as.numeric(brackets)
           patch_vert <- brackets[1]
           patch_horiz <- brackets[2]
-          ### infer no. of tiles horiz and vert (remember images were possibly resized
+          ### infer no. of tiles horiz and vert from the top left (remember images were possibly resized
           ### so figures won't necessarily be integer values - so round off)
           tiles_horiz <- w_bbox / w 
           tiles_vert <-  h_bbox / h
