@@ -153,7 +153,7 @@ images <- imageseg::loadImages(bbox_images_folder)
 <br>
 images <- imageseg::imagesToKerasInput(images, type = "image", grayscale = F)
 <br>
-model <- keras::load_model_hdf5("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\Unet_ort\\Rscripts\\trained_models\\ort_model_unet_from_scratch.hdf5", compile = F)
+model <- keras::load_model_hdf5("", compile = F)
 <br>
   
 ######  NOTE: imageSegementation from imageseg package not working for me, so edited package
