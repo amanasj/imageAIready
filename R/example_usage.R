@@ -3,7 +3,7 @@
 #############################################################
 rm(list = ls(all = TRUE))
 gc()
-devtools::install_github("amanasj/imageAIready", force=T)
+#devtools::install_github("amanasj/imageAIready", force=T)
 library(imageAIready)
 library(readheyexxml)
 library(keras)
@@ -18,13 +18,13 @@ library(keras)
 ##############################################################
 ################# input patient file below ###################
 ##############################################################
-patient_folder <- "BEbbage"
-timepoint <- "y1_140917"
+patient_folder <- ""
+timepoint <- ""
 eye <- "OD"
 ###########################
 ### filepath to patient 
 ###########################
-filepath <- paste0("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\Unet_ort\\images\\test_images\\Regenerate_scans\\",
+filepath <- paste0("",
                    patient_folder,"\\",timepoint)
 ### file path for OD or OS images
 images_path <- file.path(paste0(filepath,"\\",eye))
@@ -51,7 +51,6 @@ images_path <- file.path(paste0(filepath,"\\",eye))
 #####################################################################
 ######## read heyex xml folder along with metadata
 #####################################################################
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\readheyexxml\\Rscripts\\readheyexxml.R")
 readheyexxml <- readheyexxml(images_path)
 #readheyexxml[3]
 #####################################################################
@@ -66,7 +65,6 @@ readheyexxml <- readheyexxml(images_path)
 #####################################################################
 ######## resize images
 #####################################################################
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\imageAIready\\resize.R")
 resize <- imageAIready::resize(images_path, 
                                width = 1024, 
                                height = 512,
@@ -83,7 +81,6 @@ resize <- imageAIready::resize(images_path,
 #####################################################################
 ######## apply a bounding box function to remove black areas
 #####################################################################
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\imageAIready\\bbox_crop.R")
 bbox <- imageAIready::bbox_crop(images_path = images_path, 
                                 width = 1024, 
                                 height = 512, 
@@ -101,7 +98,6 @@ bbox <- imageAIready::bbox_crop(images_path = images_path,
 #####################################################################
 ######## split into patches
 #####################################################################
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\imageAIready\\patchifyR.R")
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\images\\")
 patches <- imageAIready::patchifyR(images_path = bbox_images_folder,
                                    patch_size = 256,
@@ -125,11 +121,10 @@ patches <- imageAIready::patchifyR(images_path = bbox_images_folder,
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
 images <- imageseg::loadImages(bbox_images_folder)
 images <- imageseg::imagesToKerasInput(images, type = "image", grayscale = F)
-model <- keras::load_model_hdf5("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\Unet_ort\\Rscripts\\trained_models\\ort_model_unet_from_scratch.hdf5", compile = F)
+model <- keras::load_model_hdf5("", compile = F)
 
 ###  NOTE: imageSegementation from imageseg package not working for me, so edited package
 ###        by adding .ragged=TRUE and saved new function as v2
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\Unet_ort\\Rscripts\\imageseg_modified_funcs\\imageSegmentation_v2.R")
 predictions <- imageAIready::imageSegmentation_v2(model=model, x=images, threshold = 0.9)
 #predictions
 #####################################################################
@@ -146,7 +141,6 @@ predictions <- imageAIready::imageSegmentation_v2(model=model, x=images, thresho
 #########################################################################################
 ###### save predicted images as overlay images using the predictions_overlay function
 #########################################################################################
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\imageAIready\\Rscripts\\predictions_overlay.R")
 images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
 ORT <- imageAIready::predictions_overlay(images_folder=images_folder, 
                                          predictions=predictions, 
@@ -166,7 +160,6 @@ ORT <- imageAIready::predictions_overlay(images_folder=images_folder,
 ######## Mosaic patches back together
 ########################################################################
 patches_folder <- paste0(filepath,"/bboxcropped_images/",eye,"/cropped_images/AI_predictions/patches/")
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\imageAIready\\Rscripts\\mosaicR.R")
 mosaic <- imageAIready::mosaicR(patches_folder = patches_folder)
 ########################################################################
 ########################################################################
@@ -182,7 +175,6 @@ mosaic <- imageAIready::mosaicR(patches_folder = patches_folder)
 ########################################################################
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
 bbox_full_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\images\\")
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\imageAIready\\Rscripts\\findORT.R")
 ORT_data_F    <-  imageAIready::findORT(predictions,
                                         heyex_images_folder = heyex_images_folder,
                                         bbox_full_images_folder = bbox_full_images_folder,
@@ -202,7 +194,6 @@ save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
 ######## overlay ORT onto enface image
 ########################################################################
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
-#source("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\imageAIready\\enfaceORTplot.R")
 enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F,
                                              heyex_images_folder = heyex_images_folder)
 ########################################################################
