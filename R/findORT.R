@@ -43,7 +43,7 @@ findORT <- function(predictions,
   ORT <- list()
   ORT_df <- data.frame()
   ORT_DF <- data.frame()
-
+  ORT_data_F <- list()
     
 
   
