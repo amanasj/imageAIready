@@ -23,7 +23,7 @@ library(imageAIready)
 
 
 ############################
-### Example useage 
+## Example useage 
 ############################
 
 <br><br>
@@ -43,7 +43,7 @@ library(keras)
 <br><br>
 
 ##############################################################
-##### input patient file below 
+#### input patient file below 
 ##############################################################
 <br>
 patient_folder <- ""
@@ -57,9 +57,7 @@ eye <- "OD"
 <br>
 
 ###############################
-<br>
-##### filepath to patient 
-<br>
+#### filepath to patient 
 ###############################
 
 <br>
@@ -87,9 +85,7 @@ images_path <- file.path(paste0(filepath,"\\",eye))
 <br><br>
 
 ##########################################################
-<br>
-##### read heyex xml folder along with metadata 
-<br>
+#### read heyex xml folder along with metadata 
 ##########################################################
 <br>
 readheyexxml <- readheyexxml(images_path)
@@ -104,9 +100,7 @@ readheyexxml <- readheyexxml(images_path)
 
 
 #################################
-<br>
-##### resize images 
-<br>
+#### resize images 
 #################################
 <br>
 resize <- imageAIready::resize(images_path, 
@@ -125,9 +119,7 @@ resize <- imageAIready::resize(images_path,
 
 
 #############################################################################################
-<br>
-##### apply a bounding box function to remove black areas 
-<br>
+#### apply a bounding box function to remove black areas 
 #############################################################################################
 <br>
 bbox <- imageAIready::bbox_crop(images_path = images_path, 
@@ -148,9 +140,7 @@ bbox <- imageAIready::bbox_crop(images_path = images_path,
 
 
 ##########################################
-<br>
-##### split into patches 
-<br>
+#### split into patches 
 ##########################################
 <br>
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\images\\")
@@ -171,9 +161,7 @@ patches <- imageAIready::patchifyR(images_path = bbox_images_folder,
 
 
 #################################
-<br>
-##### AI predictions 
-<br>
+#### AI predictions 
 #################################
 <br>
 
@@ -208,9 +196,7 @@ predictions <- imageAIready::imageSegmentation_v2(model=model, x=images, thresho
 
 
 #########################################################################################
-<br>
-##### save predicted images as overlay images using the predictions_overlay function    
-<br>
+#### save predicted images as overlay images using the predictions_overlay function    
 #########################################################################################
 <br>
 images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
@@ -228,9 +214,7 @@ ORT <- imageAIready::predictions_overlay(images_folder=images_folder,
 
 
 ##################################################
-<br>
-##### Mosaic patches back together 
-<br>
+#### Mosaic patches back together 
 ##################################################
 <br>
 patches_folder <- paste0(filepath,"/bboxcropped_images/",eye,"/cropped_images/AI_predictions/patches/")
@@ -244,9 +228,7 @@ mosaic <- imageAIready::mosaicR(patches_folder = patches_folder)
 
 
 ################################################################
-<br>
-##### Find ORT positions directly from predictions 
-<br>
+#### Find ORT positions directly from predictions 
 ################################################################
 <br>
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
@@ -270,9 +252,7 @@ save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
 
 
 #####################################################
-<br>
-##### overlay ORT onto enface image  
-<br>
+#### overlay ORT onto enface image  
 #####################################################
 <br>
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
@@ -288,9 +268,7 @@ enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F,
 
 
 #################################################
-<br>
-##### remove bbox and resize folders 
-<br>
+#### remove bbox and resize folders 
 #################################################
 <br>
 root <- dirname(images_path)
