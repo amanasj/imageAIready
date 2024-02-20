@@ -13,7 +13,7 @@ library(tidyverse)
 
 
 # display enface images
-setwd("C:\\Users\\ajosan\\OneDrive - Nexus365\\Desktop\\R_scripts\\U-net\\images\\regenerate_BW_OCT\\")
+
 enface_ordered <- mixedsort(list.files(path = ".", full.names = T, pattern = ".png", recursive = T))
 
 all_files <- as.data.frame(enface_ordered)
