@@ -17,7 +17,8 @@ install_github("amanasj/imageAIready")
 
 library(imageAIready)
 
-<br>
+<br><br><br>
+
 
 
 
@@ -28,22 +29,31 @@ library(imageAIready)
 <br>
 
 ################################################
-################################################
-#devtools::install_github("amanasj/imageAIready", force=T)
-library(imageAIready)
-library(readheyexxml)
-library(keras)
-################################################
-################################################
-
 <br>
+#devtools::install_github("amanasj/imageAIready", force=T)
+<br>
+library(imageAIready)
+<br>
+library(readheyexxml)
+<br>
+library(keras)
+<br>
+################################################
+
+<br><br>
 
 ##############################################################
+<br>
 ################# input patient file below ###################
+<br>
 ##############################################################
+<br>
 patient_folder <- ""
+<br>
 timepoint <- ""
+<br>
 eye <- "OD"
+<br>
 ###########################
 ### filepath to patient 
 ###########################
