@@ -42,7 +42,7 @@ findORT <- function(predictions,
   ##### create lists for later use
   ORT <- list()
   ORT_df <- data.frame()
-  ORT_data_F <- data.frame()
+  ORT_DF <- data.frame()
 
     
 
@@ -145,18 +145,21 @@ findORT <- function(predictions,
   
   
 
-  ORT_data_F <- ORT_df
+  ORT_DF <- ORT_df
   ### remove blank or NA or zero rows
-  ORT_data_F[ORT_data_F == ""] <- NA
-  ORT_data_F <- na.omit(ORT_data_F)
-  ORT_data_F <- ORT_data_F[ORT_data_F$ExamURL != 0, ]
+  ORT_DF[ORT_DF == ""] <- NA
+  ORT_DF <- na.omit(ORT_DF)
+  ORT_DF <- ORT_DF[ORT_DF$ExamURL != 0, ]
 
+  
+  image_dat <- cbind(x=w_orig, y=h_orig)
+  
+  ORT_data_F <- list(ORT_coords=ORT_DF, image_data=image_dat)
+  
+  
+  
   return(ORT_data_F)
   
   
-  
-  
 } ## end findORT function 
-
-
 
