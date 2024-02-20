@@ -156,17 +156,11 @@ images <- imageseg::imagesToKerasInput(images, type = "image", grayscale = F)
 model <- keras::load_model_hdf5("", compile = F)
 <br>
   
-######  NOTE: imageSegementation from imageseg package not working for me, so edited package
-
-<br>
-
-######        by adding .ragged=TRUE and saved new function as v2
+######  (NOTE: imageSegementation from imageseg package not working for me, so edited package by adding .ragged=TRUE and saved new function as v2)
 
 <br>
 
 predictions <- imageAIready::imageSegmentation_v2(model=model, x=images, threshold = 0.9)
-<br>
-#predictions
 <br>
 ############################################################################################
 
