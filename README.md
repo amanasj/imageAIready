@@ -230,7 +230,7 @@ save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
 <br>
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
 <br>
-enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F, heyex_images_folder = heyex_images_folder)
+enfaceORTplot <- imageAIready::enfaceORTplot(ORT_coords = ORT_data_F[[1]], heyex_images_folder = heyex_images_folder)
 <br>
 ######################################################
 
