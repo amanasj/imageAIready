@@ -44,6 +44,7 @@ library(keras)
 
 
 #### input patient file below 
+<br>
 ##############################################################
 <br>
 patient_folder <- ""
@@ -58,8 +59,8 @@ eye <- "OD"
 
 
 #### filepath to patient 
+<br>
 ###############################
-
 <br>
 filepath <- paste0("", patient_folder,"\\",timepoint)
 <br>
@@ -86,6 +87,7 @@ images_path <- file.path(paste0(filepath,"\\",eye))
 
 
 #### read heyex xml folder along with metadata 
+<br>
 ##########################################################
 <br>
 readheyexxml <- readheyexxml(images_path)
@@ -101,6 +103,7 @@ readheyexxml <- readheyexxml(images_path)
 
 
 #### resize images 
+<br>
 #################################
 <br>
 resize <- imageAIready::resize(images_path,  width = 1024, height = 512, destin = dirname(images_path))
@@ -114,6 +117,7 @@ resize <- imageAIready::resize(images_path,  width = 1024, height = 512, destin 
 
 
 #### apply a bounding box function to remove black areas 
+<br>
 ###########################################################################
 <br>
 bbox <- imageAIready::bbox_crop(images_path = images_path, width = 1024, height = 512, heyex_xml_file = T, destin = dirname(images_path))
@@ -127,6 +131,7 @@ bbox <- imageAIready::bbox_crop(images_path = images_path, width = 1024, height 
 
 
 #### split into patches 
+<br>
 ##########################################
 <br>
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\images\\")
@@ -141,11 +146,9 @@ patches <- imageAIready::patchifyR(images_path = bbox_images_folder, patch_size 
 
 
 
-#### AI predictions 
-#################################
+#### AI predictions (Load in images to test)
 <br>
-
-###### Load in images to test 
+#################################
 <br>
 bbox_images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
 <br>
@@ -170,7 +173,8 @@ predictions <- imageAIready::imageSegmentation_v2(model=model, x=images, thresho
 
 
 
-#### save predicted images as overlay images using the predictions_overlay function    
+#### save predicted images as overlay images using the predictions_overlay function   
+<br>
 ######################################################################################
 <br>
 images_folder <- paste0(filepath, "\\bboxcropped_images\\",eye,"\\cropped_images\\image_patches\\images\\")
@@ -185,6 +189,7 @@ ORT <- imageAIready::predictions_overlay(images_folder=images_folder, prediction
 
 
 #### Mosaic patches back together 
+<br>
 ##################################################
 <br>
 patches_folder <- paste0(filepath,"/bboxcropped_images/",eye,"/cropped_images/AI_predictions/patches/")
@@ -199,6 +204,7 @@ mosaic <- imageAIready::mosaicR(patches_folder = patches_folder)
 
 
 #### Find ORT positions directly from predictions 
+<br>
 ##############################################################
 <br>
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
@@ -217,6 +223,7 @@ save(ORT_data_F, file = paste0(heyex_images_folder, "//ORT_data_F.Rdata"))
 
 
 #### overlay ORT onto enface image  
+<br>
 #####################################################
 <br>
 heyex_images_folder <- file.path(paste0(filepath,"\\",eye))
@@ -231,6 +238,7 @@ enfaceORTplot <- imageAIready::enfaceORTplot(ORT_data_F = ORT_data_F, heyex_imag
 
 
 #### remove bbox and resize folders 
+<br>
 ################################################
 <br>
 root <- dirname(images_path)
